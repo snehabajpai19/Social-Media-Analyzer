@@ -39,7 +39,7 @@ Install system tools:
 - Open `http://127.0.0.1:5000`
 
 For production (example):
-- `gunicorn -w 2 -b 0.0.0.0:8000 app:app`
+- `gunicorn -w 2 -k gthread -t 120 -b 0.0.0.0:$PORT app:app`
 
 ## Notes
 - AI suggestions are only generated if `GEMINI_API_KEY` is present.
