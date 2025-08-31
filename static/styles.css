@@ -1,4 +1,3 @@
-/* Reset + typography */
 :root {
   --bg-start: #f8f9fa;
   --bg-end: #e9ecef;
@@ -6,7 +5,6 @@
   --card-bg: #ffffff;
   --border: #dee2e6;
   --accent: #0d6efd;
-  /* Icon chip palettes */
   --chip-blue-bg: #e7f0ff;
   --chip-blue-fg: #0b5ed7;
   --chip-purple-bg: #efe7ff;
@@ -28,7 +26,6 @@ body {
   transition: background 200ms ease, color 200ms ease;
 }
 
-/* Navbar */
 .navbar {
   background: var(--accent) !important;
 }
@@ -38,7 +35,6 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Cards */
 .card {
   border: none !important;
   border-radius: 1rem !important;
@@ -55,7 +51,6 @@ body {
   margin-bottom: 1rem;
 }
 
-/* Drop area (upload box) */
 .drop-area {
   border: 2px dashed #6c757d !important;
   border-radius: 1rem !important;
@@ -77,10 +72,8 @@ body {
   outline: 3px solid rgba(13,110,253,0.35);
 }
 
-/* Drop area icon row */
 .icon-row .icon-chip { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
 
-/* File list */
 .file-list .file-item {
   background: #ffffff;
 }
@@ -89,7 +82,6 @@ body {
   padding: 0.15rem 0.5rem !important;
 }
 
-/* Buttons */
 .btn-primary {
   background: #0d6efd !important;
   border: none !important;
@@ -102,7 +94,6 @@ body {
   background: #0b5ed7 !important;
 }
 
-/* Results box */
 .text-bg-light {
   background: #f8f9fa !important;
   border: 1px solid var(--border) !important;
@@ -114,38 +105,32 @@ body {
   overflow-y: auto;
 }
 
-/* Scrollbar styling (WebKit) */
 .text-bg-light::-webkit-scrollbar { width: 10px; height: 10px; }
 .text-bg-light::-webkit-scrollbar-thumb { background: #c8d0d8; border-radius: 8px; }
 .theme-dark .text-bg-light::-webkit-scrollbar-thumb { background: #3a4658; }
 .text-bg-light::-webkit-scrollbar-track { background: transparent; }
 
-/* Suggestions list */
 ul.small li {
   margin-bottom: 0.4rem;
   line-height: 1.4;
 }
 
-/* Badges for keywords */
 .badge {
   font-size: 0.8rem !important;
   font-weight: 500 !important;
   padding: 0.4em 0.6em !important;
 }
 
-/* Loading spinner */
 .loading .spinner-border {
   width: 1.5rem !important;
   height: 1.5rem !important;
   color: #0d6efd;
 }
 
-/* Copy buttons */
 .copy-btn {
   padding: 0.2rem 0.5rem !important;
 }
 
-/* Keyword badges */
 .keyword-badge {
   background-color: #e7f2ff !important;
   color: #084c8d !important;
@@ -155,12 +140,10 @@ ul.small li {
   color: #cfe7ff !important;
 }
 
-/* Show more/less expand style */
 .expanded-scroll {
   max-height: none !important;
 }
 
-/* Icon chips */
 .icon-chip {
   display: inline-flex;
   align-items: center;
@@ -175,7 +158,6 @@ ul.small li {
 .chip-orange { background: var(--chip-orange-bg); color: var(--chip-orange-fg); }
 .chip-cyan { background: var(--chip-cyan-bg); color: var(--chip-cyan-fg); }
 
-/* Engagement list with colored numbers */
 .engagement-list { list-style: none; padding-left: 0; }
 .engagement-item {
   display: flex; gap: 8px; align-items: flex-start;
@@ -192,7 +174,6 @@ ul.small li {
 }
 .engagement-item .eng-text { flex: 1 1 auto; }
 
-/* Mobile responsive tweaks */
 @media (max-width: 768px) {
   .card {
     margin-bottom: 1.5rem !important;
@@ -208,7 +189,6 @@ ul.small li {
   }
 }
 
-/* Dark theme overrides */
 .theme-dark {
   --bg-start: #0b0f14;
   --bg-end: #101720;
@@ -255,7 +235,6 @@ ul.small li {
   color: var(--text) !important;
 }
 
-/* Improve visibility of accordion headers in dark mode */
 .theme-dark .accordion-item {
   background-color: var(--card-bg);
   border-color: var(--border) !important;
@@ -278,7 +257,6 @@ ul.small li {
   border-color: var(--accent);
 }
 
-/* Ensure text within accordion sections is readable */
 .theme-dark .accordion,
 .theme-dark .accordion-item {
   background-color: var(--card-bg);
@@ -292,7 +270,6 @@ ul.small li {
   color: var(--text) !important;
 }
 
-/* Improve hashtag badge contrast in dark */
 .theme-dark .badge.text-bg-secondary {
   background-color: #3b4a62 !important;
   color: #e8edf4 !important;
@@ -306,7 +283,6 @@ ul.small li {
   background: #2d6a4f; color: #d2ffe9;
 }
 
-/* Ensure uploaded file list is readable in dark mode */
 .theme-dark .list-group-item {
   background-color: transparent !important;
   color: var(--text) !important;
@@ -314,7 +290,6 @@ ul.small li {
 }
 .theme-dark .list-group-item .text-truncate { color: var(--text) !important; }
 
-/* Improve overall contrast in dark mode */
 .theme-dark .text-muted { color: #b8c3cf !important; }
 .theme-dark .btn-outline-secondary {
   color: #e9eef5 !important;
@@ -327,7 +302,6 @@ ul.small li {
   border-color: #5b6f8a !important;
 }
 
-/* Drop area contrast in dark */
 .theme-dark .drop-area {
   border-color: #4a5b76 !important;
 }

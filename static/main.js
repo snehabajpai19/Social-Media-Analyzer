@@ -1,5 +1,3 @@
-// Main UI behaviors for the upload/analysis page.
-// Intentionally compact and readable — favors clarity over cleverness.
 const dropArea = document.getElementById("dropArea");
 const fileInput = document.getElementById("fileInput");
 const form = document.getElementById("uploadForm");
@@ -25,7 +23,7 @@ function renderFileList() {
     li.className = "file-item d-flex align-items-center justify-content-between py-1 px-2 border rounded mb-1";
     li.innerHTML = `
       <span class="text-truncate me-2" style="max-width: 75%">${f.name} <span class="text-muted">(${fmtBytes(f.size)})</span></span>
-      <button type="button" class="btn btn-sm btn-outline-danger remove-file" data-index="${idx}">Remove</button>
+      <button type=\"button\" class=\"btn btn-sm btn-outline-danger remove-file\" data-index=\"${idx}\">Remove</button>
     `;
     fileList.appendChild(li);
   });
@@ -145,7 +143,6 @@ if (form) {
   });
 }
 
-// Theme toggle (persisted)
 const themeToggle = document.getElementById("themeToggle");
 function applyTheme(mode) {
   const isDark = mode === "dark";
@@ -156,7 +153,6 @@ function applyTheme(mode) {
   }
 }
 
-// Toast helper using Bootstrap
 function showToast(message, variant = "primary") {
   const container = document.getElementById("toastContainer");
   if (!container || !window.bootstrap) return;
@@ -166,9 +162,9 @@ function showToast(message, variant = "primary") {
   wrapper.setAttribute("aria-live", "polite");
   wrapper.setAttribute("aria-atomic", "true");
   wrapper.innerHTML = `
-    <div class="d-flex">
-      <div class="toast-body">${message}</div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    <div class=\"d-flex\">
+      <div class=\"toast-body\">${message}</div>
+      <button type=\"button\" class=\"btn-close btn-close-white me-2 m-auto\" data-bs-dismiss=\"toast\" aria-label=\"Close\"></button>
     </div>`;
   container.appendChild(wrapper);
   const t = new bootstrap.Toast(wrapper, { delay: 1600 });
@@ -176,7 +172,6 @@ function showToast(message, variant = "primary") {
   wrapper.addEventListener("hidden.bs.toast", () => wrapper.remove());
 }
 
-// Show More/Less for combined extracted text
 const combinedText = document.getElementById("combinedText");
 const toggleCombinedBtn = document.getElementById("toggleCombined");
 if (combinedText && toggleCombinedBtn) {
@@ -188,13 +183,11 @@ if (combinedText && toggleCombinedBtn) {
     combinedText.classList.toggle("expanded-scroll");
     updateToggleLabel();
   });
-  // Only show the toggle if content is long
   if (combinedText.scrollHeight <= combinedText.clientHeight + 10) {
     toggleCombinedBtn.classList.add("d-none");
   }
 }
 
-// Save Result as JSON
 const saveBtn = document.getElementById("saveResult");
 if (saveBtn) {
   saveBtn.addEventListener("click", () => {
@@ -215,7 +208,6 @@ if (saveBtn) {
   });
 }
 
-// Clear All (reset page to initial state)
 const clearAllBtn = document.getElementById("clearAll");
 if (clearAllBtn) {
   clearAllBtn.addEventListener("click", () => {
@@ -223,7 +215,6 @@ if (clearAllBtn) {
   });
 }
 
-// Copy all engagement tips
 const copyEngBtn = document.getElementById("copyEngagement");
 if (copyEngBtn) {
   copyEngBtn.addEventListener("click", async () => {
@@ -246,3 +237,4 @@ if (themeToggle) {
     applyTheme(next);
   });
 }
+

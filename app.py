@@ -5,21 +5,19 @@ from utils.extract import extract_text_from_pdf, extract_text_from_image
 from utils.analyze import analyze_text
 from dotenv import load_dotenv
 
-load_dotenv() 
+load_dotenv()
 
-# File types we accept via upload. Add more here if needed.
-ALLOWED = {"pdf", "png", "jpg", "jpeg"}
+allowed_types = {"pdf", "png", "jpg", "jpeg"}
 
-def allowed(filename): 
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED
+def is_allowed(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in allowed_types
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "devkey")
 
-@app.route("/", methods=["GET", "POST"])  # Single page: upload + results
+@app.route("/", methods=["GET", "POST"]) 
 def index():
     if request.method == "POST":
-        # Users can drag-n-drop or pick multiple files; we handle both paths.
         files = request.files.getlist("files")
         if not files or files[0].filename == "":
             flash("Please choose at least one PDF or image")
@@ -27,7 +25,7 @@ def index():
 
         results, errors = [], []
         for f in files:
-            if not allowed(f.filename):
+            if not is_allowed(f.filename):
                 errors.append(f"Unsupported: " + f.filename)
                 continue
             name = secure_filename(f.filename)
@@ -44,8 +42,6 @@ def index():
 
         combined = "\n\n".join(r["text"] for r in results)
         analysis = analyze_text(combined) if combined else None
-
-        # Render the same page with results and a combined analysis summary.
         return render_template(
             "index.html",
             results=results,

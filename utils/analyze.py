@@ -5,9 +5,6 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from utils.gemini_client import generate_insights_with_gemini
 
 
-CTA = re.compile(r"\b(join|try|download|watch|read more|learn more|sign up|subscribe|buy now|check out|link in bio)\b", re.I)
-
-
 def tokenize(text: str):
     return re.findall(r"[A-Za-z0-9_']+", text)
 
@@ -17,18 +14,16 @@ def analyze_text(text: str) -> dict:
     if not text:
         return {"summary": {}, "engagement": [], "ai_generated": {}}
 
-    # numeric/statistical summary (local, fast)
-    sid = SentimentIntensityAnalyzer()
-    sentiment = sid.polarity_scores(text)
+    analyzer = SentimentIntensityAnalyzer()
+    sentiment = analyzer.polarity_scores(text)
 
     words = tokenize(text)
-    wc = len(words)
+    word_count = len(words)
     hashtags = re.findall(r"#\w+", text)
     mentions = re.findall(r"@\w+", text)
     urls = re.findall(r"https?://\S+", text)
-    top = Counter([w.lower() for w in words if len(w) > 2]).most_common(8)
+    top_words = Counter([w.lower() for w in words if len(w) > 2]).most_common(8)
 
-    # Tone label from local sentiment (fallback)
     compound = sentiment["compound"]
     if compound > 0.05:
         local_tone = "Positive"
@@ -37,15 +32,14 @@ def analyze_text(text: str) -> dict:
     else:
         local_tone = "Neutral"
 
-    # Inline summaries (plain ASCII to avoid encoding issues)
-    if wc < 50:
-        word_msg = f"{wc} (very short - may lack context)"
-    elif wc > 300:
-        word_msg = f"{wc} (long - consider trimming for attention)"
+    if word_count < 50:
+        word_msg = f"{word_count} (very short - may lack context)"
+    elif word_count > 300:
+        word_msg = f"{word_count} (long - consider trimming for attention)"
     else:
-        word_msg = f"{wc} (medium length - good for LinkedIn)"
+        word_msg = f"{word_count} (medium length - good for LinkedIn)"
 
-    avg_len = round(sum(len(w) for w in words) / max(1, wc), 2)
+    avg_len = round(sum(len(w) for w in words) / max(1, word_count), 2)
     if avg_len < 5:
         avg_len_msg = f"{avg_len} - Easy to read"
     elif avg_len < 7:
@@ -76,18 +70,16 @@ def analyze_text(text: str) -> dict:
         "neg": f"{sentiment['neg']}" + (" - No negativity" if sentiment['neg'] == 0 else ""),
     }
 
-    # Gemini generation (best-effort, optional)
-    g = generate_insights_with_gemini(text)
+    ai = generate_insights_with_gemini(text)
 
-    ai_caption = (g.get("caption") if isinstance(g, dict) else None) or "Add a concise, benefit-led caption."
-    ai_hashtags = (g.get("hashtags") if isinstance(g, dict) else None) or []
-    ai_suggestions = (g.get("suggestions") if isinstance(g, dict) else None) or []
-    gemini_tone = (g.get("tone") if isinstance(g, dict) else None)
-    gemini_conf = (g.get("confidence") if isinstance(g, dict) else None)
+    ai_caption = (ai.get("caption") if isinstance(ai, dict) else None) or "Add a concise, benefit-led caption."
+    ai_hashtags = (ai.get("hashtags") if isinstance(ai, dict) else None) or []
+    ai_suggestions = (ai.get("suggestions") if isinstance(ai, dict) else None) or []
+    ai_tone = (ai.get("tone") if isinstance(ai, dict) else None)
+    ai_conf = (ai.get("confidence") if isinstance(ai, dict) else None)
 
-    display_tone = (gemini_tone.capitalize() if isinstance(gemini_tone, str) and gemini_tone else local_tone)
+    display_tone = (ai_tone.capitalize() if isinstance(ai_tone, str) and ai_tone else local_tone)
 
-    # Use Gemini suggestions directly as Engagement list
     engagement = ai_suggestions
 
     return {
@@ -100,8 +92,8 @@ def analyze_text(text: str) -> dict:
             "urls": url_msg,
             "tone": display_tone,
             "sentiment": sentiment_msg,
-            "top_keywords": top,
-            "gemini_confidence": gemini_conf if gemini_conf is not None else ""
+            "top_keywords": top_words,
+            "gemini_confidence": ai_conf if ai_conf is not None else ""
         },
         "engagement": engagement,
         "ai_generated": {
