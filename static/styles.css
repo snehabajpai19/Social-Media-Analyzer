@@ -1,0 +1,341 @@
+/* Reset + typography */
+:root {
+  --bg-start: #f8f9fa;
+  --bg-end: #e9ecef;
+  --text: #212529;
+  --card-bg: #ffffff;
+  --border: #dee2e6;
+  --accent: #0d6efd;
+  /* Icon chip palettes */
+  --chip-blue-bg: #e7f0ff;
+  --chip-blue-fg: #0b5ed7;
+  --chip-purple-bg: #efe7ff;
+  --chip-purple-fg: #6f42c1;
+  --chip-green-bg: #e7f7ef;
+  --chip-green-fg: #198754;
+  --chip-orange-bg: #fff2e6;
+  --chip-orange-fg: #fd7e14;
+  --chip-cyan-bg: #e6f8ff;
+  --chip-cyan-fg: #0aa2c0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  background: linear-gradient(135deg, var(--bg-start), var(--bg-end)) !important;
+  color: var(--text) !important;
+  margin: 0;
+  padding: 0;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+/* Navbar */
+.navbar {
+  background: var(--accent) !important;
+}
+.navbar .navbar-brand {
+  font-weight: 600 !important;
+  color: #fff !important;
+  letter-spacing: 0.5px;
+}
+
+/* Cards */
+.card {
+  border: none !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+.card-title {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 1rem;
+}
+
+/* Drop area (upload box) */
+.drop-area {
+  border: 2px dashed #6c757d !important;
+  border-radius: 1rem !important;
+  padding: 2rem !important;
+  text-align: center;
+  cursor: pointer;
+  background: var(--card-bg) !important;
+  transition: all 0.3s ease;
+}
+.drop-area:hover {
+  background: #f1f5ff !important;
+  border-color: #0d6efd !important;
+}
+.drop-area.dragover {
+  border-color: #0d6efd !important;
+  background: #eef5ff !important;
+}
+.drop-area:focus {
+  outline: 3px solid rgba(13,110,253,0.35);
+}
+
+/* Drop area icon row */
+.icon-row .icon-chip { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+
+/* File list */
+.file-list .file-item {
+  background: #ffffff;
+}
+.file-list .remove-file {
+  line-height: 1;
+  padding: 0.15rem 0.5rem !important;
+}
+
+/* Buttons */
+.btn-primary {
+  background: #0d6efd !important;
+  border: none !important;
+  padding: 0.6rem 1.2rem !important;
+  font-weight: 500 !important;
+  border-radius: 0.5rem !important;
+  transition: background 0.2s ease;
+}
+.btn-primary:hover {
+  background: #0b5ed7 !important;
+}
+
+/* Results box */
+.text-bg-light {
+  background: #f8f9fa !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.8rem !important;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+/* Scrollbar styling (WebKit) */
+.text-bg-light::-webkit-scrollbar { width: 10px; height: 10px; }
+.text-bg-light::-webkit-scrollbar-thumb { background: #c8d0d8; border-radius: 8px; }
+.theme-dark .text-bg-light::-webkit-scrollbar-thumb { background: #3a4658; }
+.text-bg-light::-webkit-scrollbar-track { background: transparent; }
+
+/* Suggestions list */
+ul.small li {
+  margin-bottom: 0.4rem;
+  line-height: 1.4;
+}
+
+/* Badges for keywords */
+.badge {
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  padding: 0.4em 0.6em !important;
+}
+
+/* Loading spinner */
+.loading .spinner-border {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  color: #0d6efd;
+}
+
+/* Copy buttons */
+.copy-btn {
+  padding: 0.2rem 0.5rem !important;
+}
+
+/* Keyword badges */
+.keyword-badge {
+  background-color: #e7f2ff !important;
+  color: #084c8d !important;
+}
+.theme-dark .keyword-badge {
+  background-color: #233146 !important;
+  color: #cfe7ff !important;
+}
+
+/* Show more/less expand style */
+.expanded-scroll {
+  max-height: none !important;
+}
+
+/* Icon chips */
+.icon-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+.chip-blue { background: var(--chip-blue-bg); color: var(--chip-blue-fg); }
+.chip-purple { background: var(--chip-purple-bg); color: var(--chip-purple-fg); }
+.chip-green { background: var(--chip-green-bg); color: var(--chip-green-fg); }
+.chip-orange { background: var(--chip-orange-bg); color: var(--chip-orange-fg); }
+.chip-cyan { background: var(--chip-cyan-bg); color: var(--chip-cyan-fg); }
+
+/* Engagement list with colored numbers */
+.engagement-list { list-style: none; padding-left: 0; }
+.engagement-item {
+  display: flex; gap: 8px; align-items: flex-start;
+  background: rgba(25,135,84,0.06);
+  border: 1px solid rgba(25,135,84,0.15);
+  border-radius: 8px;
+  padding: 6px 8px; margin-bottom: 6px;
+}
+.engagement-item .count-badge {
+  min-width: 22px; height: 22px; border-radius: 999px;
+  background: #b7ead1; color: #0f5132;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 12px;
+}
+.engagement-item .eng-text { flex: 1 1 auto; }
+
+/* Mobile responsive tweaks */
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 1.5rem !important;
+  }
+  .drop-area {
+    padding: 1.2rem !important;
+  }
+  .card-title {
+    font-size: 1rem !important;
+  }
+  .navbar .navbar-brand {
+    font-size: 1rem !important;
+  }
+}
+
+/* Dark theme overrides */
+.theme-dark {
+  --bg-start: #0b0f14;
+  --bg-end: #101720;
+  --text: #e9eef5;
+  --card-bg: #1b2330;
+  --border: #2a3648;
+  --accent: #0b5ed7;
+  --chip-blue-bg: #1a2a46;
+  --chip-blue-fg: #7db5ff;
+  --chip-purple-bg: #2a1f3a;
+  --chip-purple-fg: #c6a6ff;
+  --chip-green-bg: #152824;
+  --chip-green-fg: #7cd4b2;
+  --chip-orange-bg: #3a2817;
+  --chip-orange-fg: #ffb37a;
+  --chip-cyan-bg: #0f2630;
+  --chip-cyan-fg: #7fdfff;
+}
+
+.theme-dark .card,
+.theme-dark .drop-area,
+.theme-dark .alert-light {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+}
+
+.theme-dark .text-bg-light {
+  background: #121821 !important;
+  color: var(--text) !important;
+}
+
+.theme-dark .badge.text-bg-secondary {
+  background-color: #334155 !important;
+  color: #e5e7eb !important;
+}
+
+.theme-dark .accordion-button {
+  background-color: #1f2937;
+  color: var(--text);
+}
+
+.theme-dark .accordion-body {
+  background-color: var(--card-bg);
+  color: var(--text) !important;
+}
+
+/* Improve visibility of accordion headers in dark mode */
+.theme-dark .accordion-item {
+  background-color: var(--card-bg);
+  border-color: var(--border) !important;
+}
+.theme-dark .accordion-button.collapsed {
+  background-color: #1b2330;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.theme-dark .accordion-button:not(.collapsed) {
+  background-color: #253042;
+  color: var(--text);
+  box-shadow: inset 0 -1px 0 var(--border);
+}
+.theme-dark .accordion-button::after {
+  filter: invert(1) opacity(0.8);
+}
+.theme-dark .accordion-button:focus {
+  box-shadow: 0 0 0 .2rem rgba(125, 181, 255, 0.25);
+  border-color: var(--accent);
+}
+
+/* Ensure text within accordion sections is readable */
+.theme-dark .accordion,
+.theme-dark .accordion-item {
+  background-color: var(--card-bg);
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.theme-dark .accordion-item .small,
+.theme-dark .accordion-item ul,
+.theme-dark .accordion-item li,
+.theme-dark .accordion-item strong {
+  color: var(--text) !important;
+}
+
+/* Improve hashtag badge contrast in dark */
+.theme-dark .badge.text-bg-secondary {
+  background-color: #3b4a62 !important;
+  color: #e8edf4 !important;
+  border: 1px solid #4a5b76 !important;
+}
+.theme-dark .engagement-item {
+  background: rgba(124,212,178,0.08);
+  border-color: rgba(124,212,178,0.25);
+}
+.theme-dark .engagement-item .count-badge {
+  background: #2d6a4f; color: #d2ffe9;
+}
+
+/* Ensure uploaded file list is readable in dark mode */
+.theme-dark .list-group-item {
+  background-color: transparent !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.theme-dark .list-group-item .text-truncate { color: var(--text) !important; }
+
+/* Improve overall contrast in dark mode */
+.theme-dark .text-muted { color: #b8c3cf !important; }
+.theme-dark .btn-outline-secondary {
+  color: #e9eef5 !important;
+  border-color: #4a5b76 !important;
+}
+.theme-dark .btn-outline-secondary:hover,
+.theme-dark .btn-outline-secondary:focus {
+  background-color: #2a3648 !important;
+  color: #ffffff !important;
+  border-color: #5b6f8a !important;
+}
+
+/* Drop area contrast in dark */
+.theme-dark .drop-area {
+  border-color: #4a5b76 !important;
+}
+.theme-dark .drop-area:hover {
+  background: #1e2634 !important;
+  border-color: var(--accent) !important;
+}
+.theme-dark .drop-area.dragover {
+  background: #1f2740 !important;
+  border-color: var(--accent) !important;
+}

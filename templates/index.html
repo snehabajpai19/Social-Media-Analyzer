@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <!-- Upload + Analysis (left) -->
+  <div class="col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Upload PDFs or Images</h5>
+        <form id="uploadForm" method="post" enctype="multipart/form-data">
+          <div id="dropArea" class="drop-area mb-2" tabindex="0" aria-label="File upload drop area. Press Enter to browse files.">
+            <div class="icon-row mb-2">
+              <span class="icon-chip chip-blue me-2" title="Upload"><i class="bi bi-cloud-arrow-up"></i></span>
+              <span class="icon-chip chip-cyan me-2" title="Images"><i class="bi bi-image"></i></span>
+              <span class="icon-chip chip-orange" title="PDFs"><i class="bi bi-file-earmark-pdf"></i></span>
+            </div>
+            <p class="mb-1 fw-semibold">Drag & drop files here</p>
+            <small class="text-muted d-block">or click to choose</small>
+            <small class="text-muted">Accepted: PDF, PNG, JPG, JPEG</small>
+            <input id="fileInput" class="visually-hidden" type="file" name="files" accept=".pdf,.png,.jpg,.jpeg" multiple />
+          </div>
+          <ul id="fileList" class="file-list list-unstyled small mb-3" aria-live="polite"></ul>
+          <button id="submitBtn" type="submit" class="btn btn-primary" disabled>Analyze</button>
+          <button id="clearFiles" type="button" class="btn btn-outline-secondary ms-2">Clear</button>
+          <div id="loading" class="loading mt-3 d-none" aria-live="polite">
+            <div class="spinner-border" role="status" aria-hidden="true"></div>
+            <span class="ms-2">Processing...</span>
+          </div>
+        </form>
+        {% if errors %}
+        <div class="alert alert-danger mt-3">
+          <ul class="mb-0">
+            {% for e in errors %}
+              <li>{{ e }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if results %}
+    <div class="card shadow-sm mt-3">
+      <div class="card-body">
+        <h6 class="card-title mb-2"><span class="icon-chip chip-blue me-2"><i class="bi bi-upload"></i></span> Uploaded Files ({{ results|length }})</h6>
+        <ul class="list-group list-group-flush small">
+          {% for r in results %}
+          <li class="list-group-item bg-transparent d-flex align-items-center justify-content-between">
+            <span class="text-truncate" style="max-width:80%">{{ r.filename }}</span>
+            <i class="bi bi-check2 text-success"></i>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if analysis %}
+    <div class="mt-3">
+      <div class="d-flex align-items-center justify-content-end gap-2 mb-2">
+        <button id="saveResult" type="button" class="btn btn-success btn-sm"><i class="bi bi-save me-1"></i>Save Result</button>
+        <button id="clearAll" type="button" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>Clear All</button>
+      </div>
+      <div class="accordion" id="analysisAcc">
+        <!-- Caption & Hashtags -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingCapTags">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCapTags" aria-expanded="false" aria-controls="collapseCapTags">
+              <span class="icon-chip chip-purple me-2"><i class="bi bi-chat-left-dots"></i></span> Caption & Hashtags
+            </button>
+          </h2>
+          <div id="collapseCapTags" class="accordion-collapse collapse" aria-labelledby="headingCapTags">
+            <div class="accordion-body">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <strong class="small d-block">Caption Suggestion:</strong>
+                <button type="button" class="btn btn-sm btn-outline-secondary copy-btn" data-copy-target="captionText">Copy</button>
+              </div>
+              <div id="captionText" class="alert alert-light small mb-3">{{ analysis.ai_generated.caption }}</div>
+              <strong class="small d-block mb-1"><span class="icon-chip chip-cyan me-2"><i class="bi bi-hash"></i></span>Recommended Hashtags:</strong>
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <div class="small">
+                  {% for tag in analysis.ai_generated.recommended_hashtags %}
+                    <span class="badge text-bg-secondary me-1 mb-1">{{ tag }}</span>
+                  {% endfor %}
+                </div>
+                <button id="copyHashtags" type="button" class="btn btn-sm btn-outline-secondary copy-btn" data-tags="{{ analysis.ai_generated.recommended_hashtags | join(' ') }}">Copy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Engagement -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingEng">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEng" aria-expanded="false" aria-controls="collapseEng">
+              <span class="icon-chip chip-green me-2"><i class="bi bi-people"></i></span> Engagement Suggestions
+            </button>
+          </h2>
+          <div id="collapseEng" class="accordion-collapse collapse" aria-labelledby="headingEng">
+            <div class="accordion-body">
+              <div class="d-flex align-items-center justify-content-end mb-2">
+                <button id="copyEngagement" type="button" class="btn btn-sm btn-outline-secondary"><i class="bi bi-clipboard me-1"></i>Copy All</button>
+              </div>
+              <ul id="engagementList" class="small mb-0 engagement-list">
+              {% for s in analysis.engagement %}
+                <li class="engagement-item"><span class="count-badge">{{ loop.index }}</span><span class="eng-text">{{ s }}</span></li>
+              {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Stats -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingStats">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseStats" aria-expanded="false" aria-controls="collapseStats">
+              <span class="icon-chip chip-orange me-2"><i class="bi bi-bar-chart-line"></i></span> Detailed Stats
+            </button>
+          </h2>
+          <div id="collapseStats" class="accordion-collapse collapse" aria-labelledby="headingStats">
+            <div class="accordion-body">
+              <div class="row">
+                <div class="col-12 col-md-6">
+                  <ul class="list-unstyled mb-0 small">
+                    <li><strong>Words:</strong> {{ analysis.summary.words }}</li>
+                    <li><strong>Chars:</strong> {{ analysis.summary.chars }}</li>
+                    <li><strong>Avg word len:</strong> {{ analysis.summary.avg_word_len }}</li>
+                    <li><strong>Hashtags:</strong> {{ analysis.summary.hashtags }}</li>
+                    <li><strong>Mentions:</strong> {{ analysis.summary.mentions }}</li>
+                    <li><strong>URLs:</strong> {{ analysis.summary.urls }}</li>
+                  </ul>
+                </div>
+                <div class="col-12 col-md-6">
+                  <ul class="list-unstyled mb-0 small">
+                    <li><strong>Tone:</strong> {{ analysis.summary.tone }}</li>
+                    <li><strong>AI tone confidence:</strong> {{ analysis.summary.gemini_confidence }}</li>
+                    <li><strong>Sentiment score:</strong> {{ analysis.summary.sentiment.compound }}</li>
+                    <li><strong>Positive %:</strong> {{ analysis.summary.sentiment.pos }}</li>
+                    <li><strong>Neutral %:</strong> {{ analysis.summary.sentiment.neu }}</li>
+                    <li><strong>Negative %:</strong> {{ analysis.summary.sentiment.neg }}</li>
+                  </ul>
+                  {% if analysis.summary.top_keywords %}
+                    <div class="mt-3">
+                      <strong class="small d-block mb-1">Top Keywords:</strong>
+                      <div class="small">
+                        {% for pair in analysis.summary.top_keywords %}
+                          <span class="badge keyword-badge me-1 mb-1">{{ pair[0] }}<span class="ms-1 opacity-75">×{{ pair[1] }}</span></span>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script id="analysisData" type="application/json">{{ {'analysis': analysis, 'combined_text': combined_text, 'results': results} | tojson }}</script>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Extracted text + Per-file (right) -->
+  <div class="col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between">
+          <h5 class="card-title mb-0"><span class="icon-chip chip-blue me-2"><i class="bi bi-file-earmark-text"></i></span> Extracted Text</h5>
+          <div class="d-flex gap-2">
+            <button id="toggleCombined" type="button" class="btn btn-sm btn-outline-secondary">Show More</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary copy-btn" data-copy-target="combinedText">Copy</button>
+          </div>
+        </div>
+        {% if results %}
+          <p class="text-muted">Combined text analyzed from all files:</p>
+          <div id="combinedText" class="small text-bg-light p-2 rounded overflow-auto" style="max-height:220px; white-space: pre-wrap;">
+            {{ combined_text }}
+          </div>
+        {% else %}
+          <p class="text-muted">No analysis yet. Upload files and click Analyze.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if results %}
+    <div class="card shadow-sm mt-3">
+      <div class="card-body">
+        <h5 class="card-title mb-2"><span class="icon-chip chip-cyan me-2"><i class="bi bi-files"></i></span> Per-file Extracts</h5>
+        <div class="list-group small">
+          {% for r in results %}
+            <div class="list-group-item bg-transparent">
+              <div class="fw-semibold mb-1">{{ r.filename }}</div>
+              <div class="text-bg-light p-2 rounded" style="white-space: pre-wrap; max-height: 180px; overflow:auto;">{{ r.text }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
