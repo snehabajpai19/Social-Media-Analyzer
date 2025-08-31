@@ -1,4 +1,4 @@
-# Use stable Python (not 3.13, since some libs break)
+# Use stable Python (avoid 3.13 issues)
 FROM python:3.11-slim
 
 # Install system dependencies (OCR + PDF tools)
@@ -21,5 +21,6 @@ COPY . .
 # Render sets $PORT automatically
 ENV PORT=10000
 
-# Start Flask app with Gunicorn
-CMD ["gunicorn", "-w", "2", "-k", "gthread", "-t", "120", "-b", "0.0.0.0:${PORT}", "app:app"]
+# Start Flask app with Gunicorn (Render expands $PORT)
+CMD gunicorn -w 2 -k gthread -t 120 -b 0.0.0.0:$PORT app:app
+s
